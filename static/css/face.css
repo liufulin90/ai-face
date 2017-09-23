@@ -1,0 +1,32 @@
+.bodyfixed{
+
+}
+.wrap{
+    display: flex;
+
+}
+.wrap .left,.wrap .right{
+    width: 40%;
+    text-align: center;
+}
+.wrap .left img{
+    max-width: 300px;
+    max-height: 300px;
+}
+.wrap .right video{
+    max-width: 300px;
+    min-width: 200px;
+    height: 300px;
+    border: 1px solid #cccccc;
+    background: black;
+}
+.wrap .middle{
+    width: 20%;
+    text-align: center;
+}
+.wrap .middle button{
+    display: block;
+    width: 90px;
+    height: 40px;
+    margin: 20px auto;
+}

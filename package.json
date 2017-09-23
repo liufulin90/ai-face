@@ -1,0 +1,29 @@
+{
+  "name": "ai-face",
+  "version": "1.0.0",
+  "description": "人脸智能识别系统",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "server": "node app.js &"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/liufulin90/ai-face.git"
+  },
+  "keywords": [
+    "人脸识别",
+    "baidu-ai"
+  ],
+  "author": "liufulin90",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/liufulin90/ai-face/issues"
+  },
+  "homepage": "https://github.com/liufulin90/ai-face#readme",
+  "dependencies": {
+    "baidu-ai": "^1.2.0",
+    "body-parser": "^1.18.2",
+    "express": "^4.15.4"
+  }
+}

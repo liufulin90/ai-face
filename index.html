@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>人脸智能识别系统</title>
+    <link href="static/css/face.css" rel="stylesheet" type="text/css" >
+</head>
+<body>
+<div class="bodyfixed">
+    <h1>人脸智能识别系统</h1>
+    <div class="wrap">
+        <div class="left">
+            <div>
+                <img src="static/images/myavatar.png" id="facedata">
+                <input type="file">
+            </div>
+        </div>
+        <div class="middle">
+            <button id="open" class="control-btn">开启摄像头</button>
+            <button id="scanface" class="control-btn">人脸识别</button>
+            <button id="close" class="control-btn">关闭摄像头</button>
+        </div>
+        <div class="right">
+            <video id="video"></video>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="static/js/face.js"></script>
+</body>
+</html>
