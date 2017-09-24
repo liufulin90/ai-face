@@ -1,9 +1,20 @@
-var express = require('express');
+var AipFaceClient = require('baidu-ai').face;
+// 设置APPID/AK/SK
+var APP_ID = '10178295';// "你的 App ID";
+var API_KEY = '0KHrRa6FPP0p9zdSj5F85FUr';// "你的 Api Key";
+var SECRET_KEY = 'NHazuwURYYwFUoHv6aODjyZrvPxOFtQw';// "你的 Secret Key";
+var client = new AipFaceClient(APP_ID, API_KEY, SECRET_KEY);
+
 var bodyParser = require('body-parser');
+var express = require('express');
+var fs = require('fs'),
+  rootPath = `${__dirname}/`;
 
 var app = express();
 var port = 3000;
+
 // 控制http传值，最低可以传50M
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true, limit: '50mb'}));
 
 app.use('/', express.static(`${__dirname}/`)); // 根目录可直接访问
@@ -15,17 +26,27 @@ app.all('*', function (req, res, next) {
   next();
 });
 
+//扫描请求
+app.post('/scanface', function (req, res) {
+  // 数据库源数据
+  var path = `${rootPath}static/images/myavatar.png`;
+  var imageData = fs.readFileSync(path);
+  var base64 = new Buffer(imageData).toString('base64');
+  // console.log(base64);
 
-app.get('/', function (req, res) {
-  console.log('index');
-  res.render('index', {});
+  // 人脸识别传入的数据
+  var scanData = req.body.scanData;
+  scanData = scanData.replace(/^data:image\/(\w*);base64,/g, '');
+  // console.log(scanData)
+
+  client.match([base64, scanData]).then(function(result) {
+    console.log(JSON.stringify(result));
+    res.json({score: result.result[0].score});
+  });
+
 });
 
-app.get('/scanface', function (req, res) {
-  console.log(1111);
-  res.json({a:1});
-});
-
+// 服务器监听端口
 app.listen(port, function () {
   console.log(`server listen port ${port}`);
 });

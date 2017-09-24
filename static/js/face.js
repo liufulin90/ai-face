@@ -22,7 +22,7 @@ var Util = {
     if (!options || !options.url) {
       throw new Error('request url not empty');
     }
-    options.method || 'GET';
+    options.method = options.method || 'POST';
     // 创建请求xhr对象url, success
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function () {
@@ -38,6 +38,7 @@ var Util = {
     // 打开连接 true: 异步
     xhr.open(options.method, options.url, true);
     // 开始发送
+    console.log(options)
     xhr.send(options.data);
   }
 }
@@ -83,8 +84,9 @@ function openCamera() {
     navigator.getUserMedia({ audio: true, video: { width: 300, height: 300 } },
       function(stream) {
         buffer = stream;
+        var src = window.URL && window.URL.createObjectURL(buffer) || stream;
         video.muted = true; // 设置视频静音
-        video.srcObject = stream;
+        video.src = src;
         video.onloadedmetadata = function(e) {
           video.play();
         };
@@ -95,22 +97,39 @@ function openCamera() {
     );
   } else {
     console.log("getUserMedia not supported");
+    alert(`getUserMedia not supported`);
   }
 }
-
+/**
+ * 开始人脸识别
+ */
 function scanFace() {
   console.log('开始人脸识别');
   if (!buffer) {
     console.log('没有视频流');
     return
   }
-  var oCanvas = document.createElement('canvas');
-  var cxt = oCanvas.getContext();
-  cxt.arc()
-  // 视频流解码，用video展示出来 file  blob
-  oCanvas.src = window.URL && window.URL.createObjectURL(buffer);
 
-  console.log(oCanvas);
+  // 视频流解码，用video展示出来 file  blob
+  var oCanvas = document.getElementById("canvas_l"),
+    ctx = canvas_l.getContext("2d");
+  ctx.drawImage(video, 0, 0, 300, 230); // 实际上是对视频截屏
+  $.ajax({
+    method: 'POST',
+    url: '/scanface',
+    data: {
+      baseData: Util._$('facedata').src,
+      scanData: oCanvas.toDataURL()
+    },
+    success: function (res) {
+      console.log(res);
+      if (res.score > 85) {
+        alert('识别正确');
+      } else {
+        alert('识别错误');
+      }
+    }
+  })
 }
 
 /**
