@@ -4,8 +4,9 @@
 
 接下来咱们一起探索人脸智能识别的具体实现吧！
 
-前端就普通的页面偶尔会有 `ES6` 的语法（极少），后端服务器采用`node`（具体代码查看app.js）
+前端就普通的页面偶尔会有 `ES6` 的语法（极少）[face.js](https://github.com/liufulin90/ai-face/blob/master/static/js/face.js)，后端服务器采用`node`（具体代码查看 [app.js](https://github.com/liufulin90/ai-face/blob/master/app.js)）
 
+> 人脸识别大概设计实现思路
 ```javascript
 /**
  * node sdk 人脸识别大概思路
@@ -240,6 +241,6 @@ function Loading() {
 ```
 
 #### 后记
-- 所有`Web API`接口，应有尽有 ![Web API 接口](https://developer.mozilla.org/zh-CN/docs/Web/API)
-- 更多的人脸识别文档请参考 ![百度AI](http://ai.baidu.com/sdk#bfr)
+- 所有`Web API`接口，应有尽有 [Web API 接口](https://developer.mozilla.org/zh-CN/docs/Web/API)
+- 更多的人脸识别文档请参考 [百度AI](http://ai.baidu.com/sdk#bfr)
 - 大爷，喜欢的话请 `star` 哦
