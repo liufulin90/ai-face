@@ -13,7 +13,7 @@ var client = new AipFaceClient(APP_ID, API_KEY, SECRET_KEY);
 var rootPath = `${__dirname}/`;
 
 var app = express();
-var port = 3000;
+var port = CONFIG.server_port;
 
 // 控制http传值，最低可以传50M
 app.use(bodyParser.json());
@@ -22,6 +22,7 @@ app.use(bodyParser.urlencoded({extended: true, limit: '50mb'}));
 app.use('/', express.static(`${__dirname}/`)); // 根目录可直接访问
 app.use('/static', express.static('static')); // 访问静态资源
 
+// 配置跨域请求，都能通过
 app.all('*', function (req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Content-Type', 'application/json;charset=utf-8');
@@ -51,12 +52,11 @@ app.post('/scanface', function (req, res) {
 
   client.match([imageBase64, scanData]).then(function(result) {
     console.log(JSON.stringify(result));
-    res.json({score: result.result[0].score});
+    res.json({score: result.result[0] ? result.result[0].score : 0});
   });
-
 });
 
 // 服务器监听端口
 app.listen(port, function () {
-  console.log(`server listen port ${port}`);
+  console.log(`server started listen port ${port}`);
 });

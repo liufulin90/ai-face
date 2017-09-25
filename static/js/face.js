@@ -1,6 +1,7 @@
 /**
- * Created by linxins on 17-9-23.
- * node sdk人脸识别
+ * Created by linxins
+ * node sdk 人脸识别大概思路
+ *
  * 1.前端页面
  *    1.js调用本地摄像头，获取视频流  video
  *       getUserMedia
@@ -12,6 +13,13 @@
  *       cxt.drawImage    canvas.toDataURL
  *    5.base64传输到后台
  *    6.反馈信息交互
+ *
+ * 2.后端解析
+ *    1.获取前端传入的图像数据
+ *       faceData:左侧图片数据  scanData:右侧扫描数据
+ *    2.调用 baidu-ai 处理人脸对比数据
+ *    3.返回 score 给前端
+ *       {"result":[{"index_i":"0","index_j":"1","score":92.184844970703}],"result_num":1,"log_id":2309353456092517}
  */
 
 var Util = {
@@ -68,7 +76,7 @@ Array.prototype.forEach.call(document.querySelectorAll('.control-btn'), function
         break;
     }
   })
-})
+});
 
 /**
  * 开启摄像头
@@ -76,7 +84,8 @@ Array.prototype.forEach.call(document.querySelectorAll('.control-btn'), function
  * https://developer.mozilla.org/en-US/docs/Web/API/Navigator/getUserMedia
  */
 function openCamera() {
-  console.log(`开启摄像头`)
+  console.log(`开启摄像头`);
+  // 兼容性处理
   navigator.getUserMedia = navigator.getUserMedia ||
                            navigator.webkitGetUserMedia ||
                            navigator.mozGetUserMedia;
@@ -92,16 +101,19 @@ function openCamera() {
         };
       },
       function(err) {
-        console.log("The following error occurred: " + err.name);
+        console.log(`哦哦，发生了错误：${err.name}`);
       }
     );
   } else {
-    console.log("getUserMedia not supported");
-    alert(`getUserMedia not supported`);
+    console.log('getUserMedia not supported');
+    alert('浏览器不支持 getUserMedia');
   }
 }
+
 /**
  * 开始人脸识别
+ * 将视频截屏，用canvas显示，然后再转为base64码传给后台
+ * ps: 这里相似度默认在 90% 以上就算着识别成功，可设置精准度。最高 100% 最低 80%
  */
 function scanFace() {
   console.log('开始人脸识别');
@@ -110,11 +122,16 @@ function scanFace() {
     return
   }
 
+  // 精准度
+  var accuracy = Util._$('accuracy').value;
+
   // 视频流解码，用video展示出来 file  blob
-  var oCanvas = document.getElementById("canvas_l"),
-                ctx = canvas_l.getContext("2d");
+  var oCanvas = Util._$('canvas_l');
+  var ctx = oCanvas.getContext('2d');
   ctx.drawImage(video, 0, 0, 300, 230); // 实际上是对视频截屏
   var faceData = Util._$('facedata').src;
+  var load = new Loading();
+  load.show();
   $.ajax({
     method: 'POST',
     url: '/scanface',
@@ -124,30 +141,42 @@ function scanFace() {
     },
     success: function (res) {
       console.log(res);
-      // static/images/prompt.png
-      res.score > 85 ? changeStatus('success') : changeStatus('error');
+      load.hide();
+      res.score > (!isNaN(Number(accuracy)) ? accuracy : 90) ? changeStatus('success') : changeStatus('error');
+    },
+    error: function (res) {
+      console.log(res);
+      load.hide();
     }
   })
 }
 
 /**
- * 根据状态判断检测图片是否成功标示
+ * 根据状态判断检测图片是否成功
  * @param status
  */
 function changeStatus (status) {
-  document.querySelector('.icon').src = `static/images/${!status && 'prompt' || status}.png`;
-}
-/**
- * 将视频流传入，将其关闭
- */
-function closeCamera() {
-  console.log('关闭摄像头')
-  buffer && buffer.getVideoTracks()[0].stop();
-  // video.pause(); // 暂停当前播放的音频/视频
+  var iconDom = document.querySelector('.icon');
+  iconDom.src = `static/images/${!status && 'prompt' || status}.png`;
+  iconDom.classList.remove('animation');
+  setTimeout(function () {
+    iconDom.classList.add('animation');
+  }, 200)
 }
 
 /**
- * 选择上传图片
+ * 将视频流关闭
+ */
+function closeCamera() {
+  console.log('关闭摄像头')
+  buffer && buffer.getVideoTracks()[0].stop(); // 暂停当前播放的音频/视频
+  buffer = null;
+  changeStatus();
+}
+
+/**
+ * 选择上传图片。
+ * 其实并没有向服务器上传任何文件，只是利用了H5的api将图片转为base64，然后给要显示的image的src赋值为转化后的base64码
  * @returns {boolean}
  */
 Util._$('uploadfile').onchange = function () {
@@ -165,3 +194,26 @@ Util._$('uploadfile').onchange = function () {
   }
 }
 
+/**
+ * 请求正在加载中。。。
+ * @constructor
+ */
+function Loading() {
+  var loadingDiv, queryDom = document.querySelector('.loading');
+  if (queryDom) {
+    loadingDiv = queryDom;
+  } else {
+    loadingDiv = document.createElement('div');
+    loadingDiv.classList.add('loading');
+    var loadingImg = document.createElement('img');
+    loadingImg.setAttribute('src', 'static/images/loading.gif');
+    loadingDiv.appendChild(loadingImg);
+    document.querySelector('body').appendChild(loadingDiv);
+  }
+  this.show = function () {
+    loadingDiv.style.display = 'flex';
+  }
+  this.hide = function () {
+    loadingDiv.style.display = 'none';
+  }
+}

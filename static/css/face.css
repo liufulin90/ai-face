@@ -1,12 +1,20 @@
 body{
     background: white;
+    position: relative;
+    min-width: 950px;
+    margin: 0;
+    padding: 0;
 }
-.bodyfixed{
-
+.head-title{
+    text-indent: 32px;
+}
+.head-title span{
+    font-size: 14px;
+    color: crimson
 }
 .wrap{
     display: flex;
-
+    margin-top: 40px;
 }
 .wrap .left,.wrap .right{
     width: 40%;
@@ -19,11 +27,29 @@ body{
 .wrap .left > div .icon{
     width: 32px;
     height: 32px;
-}
-.wrap .left .icon{
     position: absolute;
-    right: 30px;
-    top: 0;
+    right: -10px;
+    top: 84px;
+}
+.wrap .left > div .icon.animation{
+    animation: animateIcon 1s;
+}
+@keyframes animateIcon {
+    10% {
+        transform: scale(0, 0);
+    }
+    25% {
+        transform: scale(1.5, 1.5);
+    }
+    50% {
+        transform: scale(0.5, 0.5);
+    }
+    75% {
+        transform: scale(2.5, 2.5);
+    }
+    100% {
+        transform: scale(1, 1);
+    }
 }
 
 .wrap .left #facedata{
@@ -53,4 +79,21 @@ body{
     width: 110px;
     height: 40px;
     margin: 20px auto;
+}
+
+/*正在加载*/
+.loading{
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    left: 0;
+    top: 0;
+    background: rgba(0,0,0,.1);
+    z-index: 1000;
+}
+.loading img{
+    width: 90px;
 }

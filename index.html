@@ -7,15 +7,16 @@
 </head>
 <body>
 <div class="bodyfixed">
-    <h1>人脸智能识别系统</h1>
+    <h1 class="head-title">人脸智能识别系统 <span>建议使用最新谷歌浏览器或火狐浏览器打开</span></h1>
     <div class="wrap">
         <div class="left">
             <div>
                 <div>
                     <img src="static/images/myavatar.png" id="facedata">
                 </div>
-                <img class="icon" src="static/images/prompt.png"/>
-                <input type="file" id="uploadfile">
+                <img class="icon animation" src="static/images/prompt.png"/>
+                <br>
+                <div>请上传一张照片（png、jpg） <input type="file" id="uploadfile"></div>
                 <canvas id="canvas_l" width="300" height="300"></canvas>
             </div>
         </div>
@@ -26,6 +27,11 @@
         </div>
         <div class="right">
             <video id="video"></video>
+            <br>
+            <br>
+            <div>
+                精准度调节：<input type="number" id="accuracy" value="90" max="100" min="80">
+            </div>
         </div>
     </div>
 </div>
