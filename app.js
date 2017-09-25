@@ -1,14 +1,16 @@
-var AipFaceClient = require('baidu-ai').face;
-// 设置APPID/AK/SK
-var APP_ID = '10178295';// "你的 App ID";
-var API_KEY = '0KHrRa6FPP0p9zdSj5F85FUr';// "你的 Api Key";
-var SECRET_KEY = 'NHazuwURYYwFUoHv6aODjyZrvPxOFtQw';// "你的 Secret Key";
-var client = new AipFaceClient(APP_ID, API_KEY, SECRET_KEY);
-
 var bodyParser = require('body-parser');
 var express = require('express');
-var fs = require('fs'),
-  rootPath = `${__dirname}/`;
+var AipFaceClient = require('baidu-ai').face;
+var fs = require('fs');
+var CONFIG = require('./config');
+
+// 设置APPID/AK/SK
+var APP_ID = CONFIG.APP_ID;// "你的 App ID";
+var API_KEY = CONFIG.API_KEY;// "你的 Api Key";
+var SECRET_KEY = CONFIG.SECRET_KEY;// "你的 Secret Key";
+var client = new AipFaceClient(APP_ID, API_KEY, SECRET_KEY);
+
+var rootPath = `${__dirname}/`;
 
 var app = express();
 var port = 3000;
@@ -29,9 +31,17 @@ app.all('*', function (req, res, next) {
 //扫描请求
 app.post('/scanface', function (req, res) {
   // 数据库源数据
-  var path = `${rootPath}static/images/myavatar.png`;
-  var imageData = fs.readFileSync(path);
-  var base64 = new Buffer(imageData).toString('base64');
+  var imageBase64;
+  // 上传需要识别的图片
+  var faceData = req.body.faceData;
+  if (faceData) {
+    imageBase64 = faceData;
+  } else {
+    // 没有传图片就默认系统图片
+    var path = `${rootPath}static/images/myavatar.png`;
+    var imageData = fs.readFileSync(path);
+    imageBase64 = new Buffer(imageData).toString('base64');
+  }
   // console.log(base64);
 
   // 人脸识别传入的数据
@@ -39,7 +49,7 @@ app.post('/scanface', function (req, res) {
   scanData = scanData.replace(/^data:image\/(\w*);base64,/g, '');
   // console.log(scanData)
 
-  client.match([base64, scanData]).then(function(result) {
+  client.match([imageBase64, scanData]).then(function(result) {
     console.log(JSON.stringify(result));
     res.json({score: result.result[0].score});
   });

@@ -112,26 +112,31 @@ function scanFace() {
 
   // 视频流解码，用video展示出来 file  blob
   var oCanvas = document.getElementById("canvas_l"),
-    ctx = canvas_l.getContext("2d");
+                ctx = canvas_l.getContext("2d");
   ctx.drawImage(video, 0, 0, 300, 230); // 实际上是对视频截屏
+  var faceData = Util._$('facedata').src;
   $.ajax({
     method: 'POST',
     url: '/scanface',
     data: {
-      baseData: Util._$('facedata').src,
+      faceData: /^data:image\/(\w*);base64,/.test(faceData) ? faceData : null,
       scanData: oCanvas.toDataURL()
     },
     success: function (res) {
       console.log(res);
-      if (res.score > 85) {
-        alert('识别正确');
-      } else {
-        alert('识别错误');
-      }
+      // static/images/prompt.png
+      res.score > 85 ? changeStatus('success') : changeStatus('error');
     }
   })
 }
 
+/**
+ * 根据状态判断检测图片是否成功标示
+ * @param status
+ */
+function changeStatus (status) {
+  document.querySelector('.icon').src = `static/images/${!status && 'prompt' || status}.png`;
+}
 /**
  * 将视频流传入，将其关闭
  */
@@ -140,3 +145,23 @@ function closeCamera() {
   buffer && buffer.getVideoTracks()[0].stop();
   // video.pause(); // 暂停当前播放的音频/视频
 }
+
+/**
+ * 选择上传图片
+ * @returns {boolean}
+ */
+Util._$('uploadfile').onchange = function () {
+  var file = this.files && this.files[0];
+  //判断是否是图片类型
+  if(!/image\/(png|jpg|jpeg)/.test(file.type)){
+    this.value = null;
+    alert("只能选择(png,jpg)格式图片");
+    return false;
+  }
+  var reader = new FileReader();
+  reader.readAsDataURL(file);
+  reader.onload = function(e){
+    Util._$('facedata').src = this.result;
+  }
+}
+

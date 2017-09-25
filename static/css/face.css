@@ -12,11 +12,21 @@ body{
     width: 40%;
     text-align: center;
 }
-.wrap .left>div{
+.wrap .left > div{
     position: relative;
     background: white;
 }
-.wrap .left img{
+.wrap .left > div .icon{
+    width: 32px;
+    height: 32px;
+}
+.wrap .left .icon{
+    position: absolute;
+    right: 30px;
+    top: 0;
+}
+
+.wrap .left #facedata{
     max-width: 300px;
     max-height: 300px;
 }
