@@ -25,6 +25,7 @@
   "dependencies": {
     "baidu-ai": "^1.2.0",
     "body-parser": "^1.18.2",
-    "express": "^4.15.4"
+    "express": "^4.15.4",
+    "log4js": "^2.3.4"
   }
 }

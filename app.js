@@ -3,6 +3,8 @@ var express = require('express');
 var AipFaceClient = require('baidu-ai').face;
 var fs = require('fs');
 var CONFIG = require('./config');
+var log4js = require('./logger').log4js;
+var logger = log4js.getLogger('ai-face');
 
 // 设置APPID/AK/SK
 var APP_ID = CONFIG.APP_ID;// "你的 App ID";
@@ -59,4 +61,14 @@ app.post('/scanface', function (req, res) {
 // 服务器监听端口
 app.listen(port, function () {
   console.log(`server started listen port ${port}`);
+});
+
+process.on('exit', (code) => {
+  setTimeout(() => {
+    logger.error(`About to exit with code: ${code}`);
+  }, 0);
+});
+
+process.on('SIGINT', function() {
+  logger.error(`Got SIGINT.  Press Control-D/Control-C to exit.`);
 });
