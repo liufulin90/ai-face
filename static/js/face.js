@@ -101,12 +101,13 @@ function openCamera() {
         };
       },
       function(err) {
+        alert('哦哦……哪里错了呢？是不是没有摄像头啊？');
         console.log(`哦哦，发生了错误：${err.name}`);
       }
     );
   } else {
     console.log('getUserMedia not supported');
-    alert('浏览器不支持 getUserMedia');
+    alert('嗯哼，浏览器不支持 getUserMedia 呢，换最新版火狐浏览器试试！');
   }
 }
 
@@ -118,6 +119,7 @@ function openCamera() {
 function scanFace() {
   console.log('开始人脸识别');
   if (!buffer) {
+    alert('嘿嘿！小样儿，你没有开启摄像头呀！');
     console.log('没有视频流');
     return
   }
@@ -184,7 +186,7 @@ Util._$('uploadfile').onchange = function () {
   //判断是否是图片类型
   if(!/image\/(png|jpg|jpeg)/.test(file.type)){
     this.value = null;
-    alert("只能选择(png,jpg)格式图片");
+    alert("虽然你很(hen)美(cuo)、很(hen)帅(lou)，但是只能选择(png,jpg)格式图片");
     return false;
   }
   var reader = new FileReader();
