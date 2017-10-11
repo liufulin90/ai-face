@@ -6,7 +6,28 @@
 
 前端就普通的页面偶尔会有 `ES6` 的语法（极少）[face.js](https://github.com/liufulin90/ai-face/blob/master/static/js/face.js)，后端服务器采用`node`（具体代码查看 [app.js](https://github.com/liufulin90/ai-face/blob/master/app.js)）
 
+-------
+### 目录索引
 > 人脸识别大概设计实现思路
+- [思路分析](#人脸识别大概设计实现思路)
+
+> 主要核心逻辑包括：开启摄像头、人脸识别、关闭摄像头
+- [开启摄像头](#开启摄像头)
+- [人脸识别](#人脸识别)
+- [关闭摄像头](#关闭摄像头)
+
+> 其他
+- [选择上传图片](#选择上传图片)
+- [事件委托代理](#事件委托代理)
+- [自定义loading](#自定义loading)
+
+> 最后
+- [线上环境](#线上环境)
+- [后记](#后记)
+
+-------
+
+### 人脸识别大概设计实现思路
 ```javascript
 /**
  * node sdk 人脸识别大概思路
@@ -32,9 +53,9 @@
  */
 ```
 
-> 主要核心逻辑包括：开启摄像头、人脸识别、关闭摄像头
+### 主要核心逻辑包括：开启摄像头、人脸识别、关闭摄像头
 
-### 开启摄像头
+#### 开启摄像头
 
 ```javascript
 /**
@@ -70,7 +91,7 @@ function openCamera() {
 }
 ```
 
-### 人脸识别
+#### 人脸识别
 
 - 前端处理
 ```javascript
@@ -144,7 +165,7 @@ app.post('/scanface', function (req, res) {
 });
 ```
 
-### 关闭摄像头
+#### 关闭摄像头
 
 ```javascript
 /**
@@ -160,7 +181,7 @@ function closeCamera() {
 
 在这里核心功能已经实现了，是不是很（hen）牛（jian）逼（dan）。另外针对界面及功能的实现附带了其他效果以及实现方法。
 
-### 选择上传图片
+#### 选择上传图片
 
 ```javascript
 /**
@@ -184,7 +205,7 @@ Util._$('uploadfile').onchange = function () {
 }
 ```
 
-### 事件委托代理
+#### 事件委托代理
 
 ```javascript
 /**
@@ -212,7 +233,7 @@ Array.prototype.forEach.call(document.querySelectorAll('.control-btn'), function
 });
 ```
 
-### 自定义 loading
+### 自定义loading
 
 ```javascript
 /**
@@ -239,6 +260,11 @@ function Loading() {
   }
 }
 ```
+
+### 最后
+
+#### 线上环境
+亲，可是试试自己的脸蛋好不好使哦！！！[使劲戳我吧！](http://aiface.linxins.com/)
 
 #### 后记
 - 所有`Web API`接口，应有尽有 [Web API 接口](https://developer.mozilla.org/zh-CN/docs/Web/API)
