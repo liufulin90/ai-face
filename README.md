@@ -164,6 +164,12 @@ app.post('/scanface', function (req, res) {
   });
 });
 ```
+- 启动后端服务
+
+在终端执行如下命令：
+```bash
+node app.js
+```
 
 #### 关闭摄像头
 
